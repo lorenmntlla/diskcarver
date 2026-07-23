@@ -28,7 +28,7 @@ typedef struct {
  * Opens disk from file
  * @param path Path of disk
  * @param permission Desired disk access permission
- * @return Pointer to disk on the heap
+ * @return Pointer to disk on the heap if successful, null pointer otherwise
  * */
 Disk *disk_open(const char *path, Permission permission);
 

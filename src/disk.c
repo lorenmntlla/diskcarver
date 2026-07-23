@@ -11,11 +11,19 @@ Disk *disk_open(const char *path, const Permission permission) {
 
   disk->fd = open(path, (int)permission);
 
-  if (ioctl(disk->fd, BLKSSZGET, &disk->logical_sector_size) < 0)
+  if (ioctl(disk->fd, BLKSSZGET, &disk->logical_sector_size) < 0) {
     perror("Failed to get logical sector size");
 
-  if (ioctl(disk->fd, BLKPBSZGET, &disk->physical_sector_size) < 0)
+    free(disk);
+    return NULL;
+  }
+
+  if (ioctl(disk->fd, BLKPBSZGET, &disk->physical_sector_size) < 0) {
     perror("Failed to get physical sector size");
+
+    free(disk);
+    return NULL;
+  }
 
   disk->current_sector = 0;
 
