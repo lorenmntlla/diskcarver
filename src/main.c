@@ -11,6 +11,9 @@ int main(int argc, char **argv) {
 
   Disk *disk = disk_open(argv[1], r);
 
+  if (!disk)
+    return EXIT_FAILURE;
+
   char *end = NULL;
   size_t sectors = strtoul(argv[2], &end, 10);
 
@@ -36,6 +39,8 @@ int main(int argc, char **argv) {
     }
   }
   printf("\n");
+
+  disk_close(disk);
 
   return EXIT_SUCCESS;
 }
