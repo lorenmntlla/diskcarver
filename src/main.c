@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define COUNT 512
-
 int main(int argc, char **argv) {
   if (argc < 3)
     return EXIT_FAILURE;
