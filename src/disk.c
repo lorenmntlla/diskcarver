@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 Disk *disk_open(const char *path, const Permission permission) {
-  Disk *disk = malloc(sizeof(Disk));
+  Disk *disk = calloc(sizeof(Disk), sizeof(Disk));
 
   disk->fd = open(path, (int)permission);
 
