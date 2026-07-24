@@ -9,7 +9,6 @@
 #include <stdint.h>
 
 #pragma pack(push, 1)
-
 /**
  * Master Boot Record Entry
  * */
@@ -20,6 +19,5 @@ typedef struct {
   uint8_t chs_end[3];
   uint32_t lba_start;
   uint32_t num_sectors;
-
 } MBR_Entry;
 #pragma pack(pop)

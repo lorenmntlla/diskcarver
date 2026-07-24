@@ -1,11 +1,14 @@
 #include "../include/disk.h"
+#include "../include/mbr.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 int main(int argc, char **argv) {
-  if (argc < 3) {
-    printf("Usage: %s <path_to_disk> <number_of_sectors>\n", argv[0]);
+  if (argc < 2) {
+    printf("Usage: %s <path_to_disk>\n", argv[0]);
 
     return EXIT_FAILURE;
   }
@@ -15,33 +18,23 @@ int main(int argc, char **argv) {
   if (!disk)
     return EXIT_FAILURE;
 
-  size_t sectors = (size_t)atoi(argv[2]);
+  uint8_t *buffer = malloc(sizeof(*buffer) * disk->sector_size);
 
-  size_t j = 0;
+  ssize_t read = disk_read(disk, buffer);
+  if (read == -1)
+    return EXIT_FAILURE;
 
-  char buffer[disk->sector_size];
+  if (buffer[511] == 0xAA) {
+    printf("Partition table is Master Boot Record\n");
 
-  while (sectors > disk->current_sector) {
-    const ssize_t read = disk_read(disk, buffer);
-    if (read == -1)
-      break;
+    MBR_Entry part[4];
 
-    for (ssize_t i = 0; i < read; i++, j++) {
-      if (j % 16 == 0) {
-        if (j != 0)
-          printf("\n");
+    memcpy(part, buffer + 446, 64);
 
-        printf("%7.7lx ", j);
-      }
-
-      if (i % 8 == 0)
-        printf(" ");
-
-      printf("%2.2x ", buffer[i] & 0xff);
-    }
+    printf("partition type: %u", part[0].type);
   }
-  printf("\n");
 
+  free(buffer);
   disk_close(disk);
 
   return EXIT_SUCCESS;
