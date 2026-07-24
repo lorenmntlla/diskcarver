@@ -12,8 +12,7 @@ int main(int argc, char **argv) {
   if (!disk)
     return EXIT_FAILURE;
 
-  char *end = NULL;
-  size_t sectors = strtoul(argv[2], &end, 10);
+  size_t sectors = (size_t)atoi(argv[2]);
 
   size_t j = 0;
 
