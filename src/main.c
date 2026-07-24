@@ -4,8 +4,11 @@
 #include <unistd.h>
 
 int main(int argc, char **argv) {
-  if (argc < 3)
+  if (argc < 3) {
+    printf("Usage: %s <path_to_disk> <number_of_sectors>\n", argv[0]);
+
     return EXIT_FAILURE;
+  }
 
   Disk *disk = disk_open(argv[1], R);
 
