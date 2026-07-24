@@ -15,13 +15,19 @@
 typedef enum { R = O_RDONLY, W = O_WRONLY, RW = O_RDWR } Permission;
 
 /**
+ * Enum DiskType describing if it is a physical block device
+ * */
+typedef enum { BLOCK_DEVICE = 0, IMAGE_FILE } DiskType;
+
+/**
  * Struct Disk
  * */
 typedef struct {
   int fd;
-  size_t logical_sector_size;
-  size_t physical_sector_size;
+  DiskType type;
+  size_t sector_size;
   size_t current_sector;
+  size_t total_bytes;
 } Disk;
 
 /**
@@ -40,7 +46,8 @@ Disk *disk_open(const char *path, Permission permission);
 int disk_close(Disk *disk);
 
 /**
- * Reads logical_sector_size bytes to specified buffer and advances current_sector
+ * Reads sector_size bytes to specified buffer and advances current_sector
+ * if not EOF
  * @param disk Pointer to Disk
  * @param buffer Buffer
  * @return Total of bytes read

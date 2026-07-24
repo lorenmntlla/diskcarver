@@ -16,12 +16,13 @@ int main(int argc, char **argv) {
 
   size_t j = 0;
 
-  char buffer[disk->logical_sector_size];
+  char buffer[disk->sector_size];
 
   while (sectors > disk->current_sector) {
-    disk_read(disk, buffer);
+    if (disk_read(disk, buffer) == -1)
+      break;
 
-    for (size_t i = 0; i < disk->logical_sector_size; i++, j++) {
+    for (size_t i = 0; i < disk->sector_size; i++, j++) {
       if (j % 16 == 0) {
         if (j != 0)
           printf("\n");
