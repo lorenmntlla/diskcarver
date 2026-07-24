@@ -1,9 +1,9 @@
 #include "../include/disk.h"
 #include "../include/mbr.h"
+#include "../include/partition_table.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 int main(int argc, char **argv) {
@@ -18,23 +18,16 @@ int main(int argc, char **argv) {
   if (!disk)
     return EXIT_FAILURE;
 
-  uint8_t *buffer = malloc(sizeof(*buffer) * disk->sector_size);
+  if (get_PartitionTable(disk) == MASTER_BOOT_RECORD) {
+    MBR_Entry *partitions = get_MBR_Entries(disk);
 
-  ssize_t read = disk_read(disk, buffer, ADVANCE);
-  if (read == -1)
-    return EXIT_FAILURE;
+    for (size_t i = 0; i < 4; i++) {
+      printf("partition %lu of type: %u\n", i, partitions[i].type);
+    }
 
-  if (buffer[511] == 0xAA) {
-    printf("Partition table is Master Boot Record\n");
-
-    MBR_Entry part[4];
-
-    memcpy(part, buffer + 446, 64);
-
-    printf("partition type: %u", part[0].type);
+    free(partitions);
   }
 
-  free(buffer);
   disk_close(disk);
 
   return EXIT_SUCCESS;
