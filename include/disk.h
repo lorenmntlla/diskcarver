@@ -4,6 +4,7 @@
  *
  * @license SPDX-License-Identifier: GPL-3.0+ (see COPYING)
  **/
+#pragma once
 
 #include <fcntl.h>
 #include <stddef.h>
