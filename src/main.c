@@ -19,10 +19,11 @@ int main(int argc, char **argv) {
   char buffer[disk->sector_size];
 
   while (sectors > disk->current_sector) {
-    if (disk_read(disk, buffer) == -1)
+    const ssize_t read = disk_read(disk, buffer);
+    if (read == -1)
       break;
 
-    for (size_t i = 0; i < disk->sector_size; i++, j++) {
+    for (ssize_t i = 0; i < read; i++, j++) {
       if (j % 16 == 0) {
         if (j != 0)
           printf("\n");
