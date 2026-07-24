@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 
   uint8_t *buffer = malloc(sizeof(*buffer) * disk->sector_size);
 
-  ssize_t read = disk_read(disk, buffer);
+  ssize_t read = disk_read(disk, buffer, ADVANCE);
   if (read == -1)
     return EXIT_FAILURE;
 

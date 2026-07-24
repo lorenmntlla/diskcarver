@@ -4,6 +4,7 @@
  *
  * @license SPDX-License-Identifier: GPL-3.0+ (see COPYING)
  **/
+#pragma once
 
 #include <fcntl.h>
 #include <stddef.h>
@@ -18,6 +19,11 @@ typedef enum { R = O_RDONLY, W = O_WRONLY, RW = O_RDWR } Permission;
  * Enum DiskType describing if it is a physical block device
  * */
 typedef enum { BLOCK_DEVICE = 0, IMAGE_FILE } DiskType;
+
+/**
+ * Enum ReadFlag describing disk_read() current_sector behaviour
+ * */
+typedef enum { NO_ADVANCE = 0, ADVANCE } ReadFlag;
 
 /**
  * Struct Disk
@@ -52,4 +58,4 @@ int disk_close(Disk *disk);
  * @param buffer Buffer
  * @return Total of bytes read
  * */
-ssize_t disk_read(Disk *disk, void *buffer);
+ssize_t disk_read(Disk *disk, void *buffer, ReadFlag advance);

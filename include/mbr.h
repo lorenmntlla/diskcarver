@@ -6,6 +6,7 @@
  **/
 #pragma once
 
+#include "../include/disk.h"
 #include <stdint.h>
 
 #pragma pack(push, 1)
@@ -21,3 +22,5 @@ typedef struct {
   uint32_t num_sectors;
 } MBR_Entry;
 #pragma pack(pop)
+
+MBR_Entry *get_MBR_Entries(Disk *disk);

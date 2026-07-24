@@ -65,7 +65,7 @@ int disk_close(Disk *disk) {
   return retcode;
 }
 
-ssize_t disk_read(Disk *disk, void *buffer) {
+ssize_t disk_read(Disk *disk, void *buffer, ReadFlag advance) {
   const size_t next_chunk = (disk->current_sector + 1) * disk->sector_size;
   size_t bytes = disk->sector_size;
 
@@ -84,7 +84,8 @@ ssize_t disk_read(Disk *disk, void *buffer) {
   if (retcode != (ssize_t)bytes)
     perror("Failed to read sector from disk");
 
-  disk->current_sector++;
+  if (advance)
+    disk->current_sector++;
 
   return retcode;
 }
