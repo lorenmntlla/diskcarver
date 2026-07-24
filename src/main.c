@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
   if (argc < 3)
     return EXIT_FAILURE;
 
-  Disk *disk = disk_open(argv[1], r);
+  Disk *disk = disk_open(argv[1], R);
 
   if (!disk)
     return EXIT_FAILURE;

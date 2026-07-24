@@ -12,7 +12,7 @@
 /**
  * Enum Permission for read-only, write-only and read-write disk opening
  * */
-typedef enum { r = O_RDONLY, w = O_WRONLY, rw = O_RDWR } Permission;
+typedef enum { R = O_RDONLY, W = O_WRONLY, RW = O_RDWR } Permission;
 
 /**
  * Struct Disk
