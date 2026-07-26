@@ -21,11 +21,6 @@ typedef enum { R = O_RDONLY, W = O_WRONLY, RW = O_RDWR } Permission;
 typedef enum { BLOCK_DEVICE = 0, IMAGE_FILE } DiskType;
 
 /**
- * Enum ReadFlag describing disk_read() current_sector behaviour
- * */
-typedef enum { NO_ADVANCE = 0, ADVANCE } ReadFlag;
-
-/**
  * Struct Disk
  * */
 typedef struct {
@@ -58,4 +53,4 @@ int disk_close(Disk *disk);
  * @param buffer Buffer
  * @return Total of bytes read
  * */
-ssize_t disk_read(Disk *disk, void *buffer, ReadFlag advance);
+ssize_t disk_read(Disk *disk, void *buffer);
