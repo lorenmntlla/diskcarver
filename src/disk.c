@@ -84,8 +84,12 @@ ssize_t disk_read(Disk *disk, void *buffer, ReadFlag advance) {
   if (retcode != (ssize_t)bytes)
     perror("Failed to read sector from disk");
 
-  if (advance)
-    disk->current_sector++;
+  if (advance == NO_ADVANCE) {
+    lseek(disk->fd, -(__off_t)bytes, SEEK_CUR);
+    return retcode;
+  }
+
+  disk->current_sector++;
 
   return retcode;
 }

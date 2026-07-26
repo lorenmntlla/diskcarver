@@ -22,11 +22,12 @@ int main(int argc, char **argv) {
     MBR_Entry *partitions = get_MBR_Entries(disk);
 
     for (size_t i = 0; i < 4; i++) {
-      printf("partition %lu of type: %u\n", i, partitions[i].type);
+      printf("partition %lu status: %#x\n", i, partitions[i].status);
     }
 
     free(partitions);
-  }
+  } else
+    printf("Partition table is not MBR\n");
 
   disk_close(disk);
 
