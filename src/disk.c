@@ -103,3 +103,7 @@ off_t disk_seek(Disk *disk, off_t offset, int whence) {
 
   return retcode;
 }
+
+off_t disk_seek_lba(Disk *disk, off_t lba_offset, int whence) {
+  return disk_seek(disk, lba_offset * (off_t)disk->sector_size, whence);
+}
