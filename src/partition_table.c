@@ -15,18 +15,19 @@ PartitionTable get_PartitionTable(Disk *disk) {
     return INVALID;
   }
 
-  if (disk->sector_size < 1024)
-    disk_read(disk, header);
-
-  disk_seek(disk, 0, SEEK_SET);
+  // Read LBA 1 into buffer
+  disk_seek(disk, (off_t)disk->sector_size, SEEK_SET);
+  disk_read(disk, header);
 
   if (strncmp((char *)header, "EFI PART", 8) == 0) {
     free(header);
+    disk_seek(disk, 0, SEEK_SET);
 
     return GUID;
   }
 
   free(header);
+  disk_seek(disk, 0, SEEK_SET);
 
   return MASTER_BOOT_RECORD;
 }
