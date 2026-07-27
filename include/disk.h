@@ -56,7 +56,7 @@ int disk_close(Disk *disk);
 ssize_t disk_read(Disk *disk, void *buffer);
 
 /**
- * Reposition disk offset in bytes and sets current_sector accordingly
+ * Reposition disk offset in bytes and sets current_sector
  * @param disk Pointer to disk
  * @param offset Offset in bytes
  * @param whence Whence directive defined for POSIX
@@ -65,7 +65,7 @@ ssize_t disk_read(Disk *disk, void *buffer);
 off_t disk_seek(Disk *disk, off_t offset, int whence);
 
 /**
- * Reposition disk offset in LBAs and sets current_sector accordingly
+ * Reposition disk offset in LBAs and sets current_sector
  * @param disk Pointer to disk
  * @param offset Offset in LBAs
  * @param whence Whence directive defined for POSIX
