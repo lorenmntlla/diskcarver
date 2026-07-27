@@ -87,10 +87,19 @@ ssize_t disk_read(Disk *disk, void *buffer) {
 
   disk->current_sector++;
 
+  return retcode;
+}
+
+off_t disk_seek(Disk *disk, off_t offset, int whence) {
+  off_t retcode;
+
+  retcode = lseek(disk->fd, offset, whence);
+  if (retcode < 0) {
+    perror("Could not seek disk");
     return retcode;
   }
 
-  disk->current_sector++;
+  disk->current_sector = (size_t)retcode / disk->sector_size;
 
   return retcode;
 }
