@@ -54,3 +54,12 @@ int disk_close(Disk *disk);
  * @return Total of bytes read
  * */
 ssize_t disk_read(Disk *disk, void *buffer);
+
+/**
+ * Reposition disk offset and sets current_sector accordingly
+ * @param disk Pointer to disk
+ * @param offset Offset
+ * @param whence Whence directive defined for POSIX
+ * @return Resulting offset location if successful, -1 otherwise.
+ * */
+off_t disk_seek(Disk *disk, off_t offset, int whence);

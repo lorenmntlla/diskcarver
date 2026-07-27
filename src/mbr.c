@@ -1,0 +1,22 @@
+#include "../include/mbr.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+MBR_Entry *get_MBR_entries(Disk *disk) {
+  MBR_Entry *entries = calloc(4, sizeof(*entries));
+
+  uint8_t *header = calloc(1, disk->sector_size);
+  if (disk_read(disk, header) < 512) {
+    free(entries);
+    return NULL;
+  }
+
+  memcpy(entries, header + 0x01BE, 64);
+
+  free(header);
+
+  disk_seek(disk, 0, SEEK_SET);
+
+  return entries;
+}
