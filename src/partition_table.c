@@ -16,7 +16,6 @@ PartitionTable get_PartitionTable(Disk *disk) {
   }
 
   // Read LBA 1 into buffer
-  disk_seek(disk, (off_t)disk->sector_size, SEEK_SET);
   disk_read(disk, header);
 
   if (strncmp((char *)header, "EFI PART", 8) == 0) {
