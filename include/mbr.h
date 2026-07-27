@@ -9,10 +9,10 @@
 #include "../include/disk.h"
 #include <stdint.h>
 
-#pragma pack(push, 1)
 /**
- * Master Boot Record Entry
+ * Struct for Master Boot Record Entry
  * */
+#pragma pack(push, 1)
 typedef struct {
   uint8_t status;
   uint8_t chs_start[3];
@@ -23,4 +23,9 @@ typedef struct {
 } MBR_Entry;
 #pragma pack(pop)
 
-MBR_Entry *get_MBR_Entries(Disk *disk);
+/**
+ * Get Master Boot Record entries (partitions) from a MBR formatted disk
+ * @param disk Pointer to disk
+ * @return Pointer to MBR entries in heap
+ * */
+MBR_Entry *get_MBR_entries(Disk *disk);
