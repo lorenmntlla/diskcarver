@@ -1,11 +1,21 @@
 cmake_minimum_required(VERSION 3.31...4.4)
 
-project(diskcarver VERSION 0.1.0 LANGUAGES C)
+project(
+  diskcarver
+  VERSION 0.1.0
+  LANGUAGES C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(APP_NAME "diskcarver")
 
-set(COMPILE_OPTIONS "-pipe" "-Wall" "-Wextra" "-Wabi" "-Wconversion" "-pedantic" "-Wfatal-errors")
+set(COMPILE_OPTIONS
+    "-pipe"
+    "-Wall"
+    "-Wextra"
+    "-Wabi"
+    "-Wconversion"
+    "-Wfatal-errors"
+    "-pedantic")
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_EXTENSIONS OFF)
