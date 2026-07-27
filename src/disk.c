@@ -65,13 +65,13 @@ int disk_close(Disk *disk) {
   return retcode;
 }
 
-ssize_t disk_read(Disk *disk, void *buffer, ReadFlag advance) {
-  const size_t next_chunk = (disk->current_sector + 1) * disk->sector_size;
+ssize_t disk_read(Disk *disk, void *buffer) {
+  const size_t next = (disk->current_sector + 1) * disk->sector_size;
   size_t bytes = disk->sector_size;
 
-  if (next_chunk > disk->total_bytes) {
+  if (next > disk->total_bytes) {
     ssize_t remaining = (ssize_t)disk->total_bytes -
-                        ((ssize_t)next_chunk - (ssize_t)disk->sector_size);
+                        (ssize_t)(disk->current_sector * disk->sector_size);
 
     if (remaining <= 0)
       return -1;
@@ -79,13 +79,14 @@ ssize_t disk_read(Disk *disk, void *buffer, ReadFlag advance) {
     bytes = (size_t)remaining;
   }
 
-  ssize_t retcode = read(disk->fd, buffer, bytes);
+  ssize_t retcode;
+  retcode = read(disk->fd, buffer, bytes);
 
   if (retcode != (ssize_t)bytes)
     perror("Failed to read sector from disk");
 
-  if (advance == NO_ADVANCE) {
-    lseek(disk->fd, -(__off_t)bytes, SEEK_CUR);
+  disk->current_sector++;
+
     return retcode;
   }
 
