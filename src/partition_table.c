@@ -6,12 +6,14 @@
 PartitionTable get_PartitionTable(Disk *disk) {
   uint8_t *header = calloc(1, disk->sector_size);
 
+  off_t previous_offset = disk_seek(disk, 0, SEEK_CUR);
+
   disk_seek(disk, 0, SEEK_SET);
   disk_read(disk, header);
 
   if (header[0x1FE] != 0x55 || header[0x1FF] != 0xAA) {
     free(header);
-    disk_seek(disk, 0, SEEK_SET);
+    disk_seek(disk, previous_offset, SEEK_SET);
 
     return INVALID;
   }
@@ -21,13 +23,13 @@ PartitionTable get_PartitionTable(Disk *disk) {
 
   if (strncmp((char *)header, "EFI PART", 8) == 0) {
     free(header);
-    disk_seek(disk, 0, SEEK_SET);
+    disk_seek(disk, previous_offset, SEEK_SET);
 
     return GUID;
   }
 
   free(header);
-  disk_seek(disk, 0, SEEK_SET);
+  disk_seek(disk, previous_offset, SEEK_SET);
 
   return MASTER_BOOT_RECORD;
 }
