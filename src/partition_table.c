@@ -6,6 +6,7 @@
 PartitionTable get_PartitionTable(Disk *disk) {
   uint8_t *header = calloc(1, disk->sector_size);
 
+  disk_seek(disk, 0, SEEK_SET);
   disk_read(disk, header);
 
   if (header[0x1FE] != 0x55 || header[0x1FF] != 0xAA) {
