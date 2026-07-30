@@ -92,7 +92,7 @@ ssize_t disk_read(Disk *disk, void *buffer) {
 
 ssize_t disk_read_sectors(Disk *disk, void *buffer, size_t num_sectors) {
   size_t bytes = disk->sector_size * num_sectors;
-  const size_t next = (disk->current_sector + 1) * bytes;
+  const size_t next = (disk->current_sector + num_sectors) * disk->sector_size;
 
   if (next > disk->total_bytes) {
     ssize_t remaining = (ssize_t)disk->total_bytes -
