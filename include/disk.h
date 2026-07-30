@@ -56,6 +56,16 @@ int disk_close(Disk *disk);
 ssize_t disk_read(Disk *disk, void *buffer);
 
 /**
+ * Reads sectors to specified buffer and advances current_sector
+ * if not EOF
+ * @param disk Pointer to Disk
+ * @param buffer Buffer
+ * @param num_sectors Number of sectors to be read
+ * @return Total of bytes read
+ * */
+ssize_t disk_read_sectors(Disk *disk, void *buffer, size_t num_sectors);
+
+/**
  * Reposition disk offset in bytes and sets current_sector
  * @param disk Pointer to disk
  * @param offset Offset in bytes
