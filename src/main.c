@@ -1,6 +1,7 @@
 #include "../include/disk.h"
 #include "../include/mbr.h"
 #include "../include/partition_table.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -32,6 +33,31 @@ int main(int argc, char **argv) {
       printf("\ttype: %#2.2x\n", part[i].type);
       printf("\tLBA of first sector: %u\n", part[i].lba_start);
       printf("\tNumber of sectors: %u\n", part[i].num_sectors);
+
+      if (part[i].type != 0) {
+        uint8_t *data = calloc(1, part[i].num_sectors * disk->sector_size *
+                                      sizeof(uint8_t));
+
+        ssize_t j = disk_seek_sectors(disk, part[i].lba_start, SEEK_SET);
+        disk_read_sectors(disk, data, part[i].num_sectors);
+
+        for (size_t i = 0; i < 512; i++, j++) {
+          if (j % 16 == 0) {
+            if (i != 0)
+              printf("\n");
+
+            printf("%7.7lx: ", j);
+          }
+
+          if (i % 8 == 0)
+            printf(" ");
+
+          printf("%2.2x ", data[i]);
+        }
+        puts("");
+
+        free(data);
+      }
     }
 
     free(part);
