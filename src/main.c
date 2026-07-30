@@ -40,17 +40,17 @@ int main(int argc, char **argv) {
         puts("\tFAT16:");
 
         uint8_t *buf = calloc(disk->sector_size, sizeof(uint8_t));
-        FAT16 *header = calloc(1, sizeof(FAT16));
+        FAT16 header;
 
         disk_seek_sectors(disk, part[i].lba_start, SEEK_SET);
         disk_read(disk, buf);
 
-        memcpy(header, buf, sizeof(FAT16));
+        memcpy(&header, buf, sizeof(FAT16));
 
-        printf("\t\tDirectory entries on root: %u\n", header->root_entry_counter);
+        printf("\t\tDirectory entries on root: %u\n",
+               header.root_entry_counter);
 
         free(buf);
-        free(header);
       }
     }
 
