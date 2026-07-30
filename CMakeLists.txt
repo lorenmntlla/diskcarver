@@ -30,7 +30,10 @@ target_compile_options(partition_table PRIVATE ${COMPILE_OPTIONS})
 add_library(mbr src/mbr.c include/mbr.h)
 target_compile_options(mbr PRIVATE ${COMPILE_OPTIONS})
 
+add_library(fat src/fat.c include/fat.h)
+target_compile_options(fat PRIVATE ${COMPILE_OPTIONS})
+
 add_executable(${APP_NAME} src/main.c)
 target_include_directories(${APP_NAME} PRIVATE include)
-target_link_libraries(${APP_NAME} PRIVATE disk partition_table mbr)
+target_link_libraries(${APP_NAME} PRIVATE disk partition_table mbr fat)
 target_compile_options(${APP_NAME} PRIVATE ${COMPILE_OPTIONS})

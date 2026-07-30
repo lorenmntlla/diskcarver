@@ -1,9 +1,11 @@
 #include "../include/disk.h"
 #include "../include/mbr.h"
 #include "../include/partition_table.h"
+#include "fat.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 int main(int argc, char **argv) {
@@ -28,35 +30,27 @@ int main(int argc, char **argv) {
     MBR_Entry *part = get_MBR_entries(disk);
 
     for (size_t i = 0; i < 4; i++) {
-      printf("partition %lu:\n", i + 1);
+      printf("Partition %lu:\n", i + 1);
       printf("\tstatus: %#2.2x\n", part[i].status);
       printf("\ttype: %#2.2x\n", part[i].type);
       printf("\tLBA of first sector: %u\n", part[i].lba_start);
       printf("\tNumber of sectors: %u\n", part[i].num_sectors);
 
-      if (part[i].type != 0) {
-        uint8_t *data = calloc(1, part[i].num_sectors * disk->sector_size *
-                                      sizeof(uint8_t));
+      if (part[i].type == 0x06) {
+        puts("\tFAT16:");
 
-        ssize_t j = disk_seek_sectors(disk, part[i].lba_start, SEEK_SET);
-        disk_read_sectors(disk, data, part[i].num_sectors);
+        uint8_t *buf = calloc(disk->sector_size, sizeof(uint8_t));
+        FAT16 *header = calloc(1, sizeof(FAT16));
 
-        for (size_t i = 0; i < 512; i++, j++) {
-          if (j % 16 == 0) {
-            if (i != 0)
-              printf("\n");
+        disk_seek_sectors(disk, part[i].lba_start, SEEK_SET);
+        disk_read(disk, buf);
 
-            printf("%7.7lx: ", j);
-          }
+        memcpy(header, buf, sizeof(FAT16));
 
-          if (i % 8 == 0)
-            printf(" ");
+        printf("\t\tDirectory entries on root: %u\n", header->root_entry_counter);
 
-          printf("%2.2x ", data[i]);
-        }
-        puts("");
-
-        free(data);
+        free(buf);
+        free(header);
       }
     }
 

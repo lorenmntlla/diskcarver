@@ -24,9 +24,6 @@ typedef struct {
   uint16_t number_of_heads;
   uint32_t hidden_sectors;
   uint32_t total_sectors32;
-} FAT_common;
-
-typedef struct {
   uint8_t drive_number;
   uint8_t reserved1;
   uint8_t boot_signature;
@@ -36,6 +33,20 @@ typedef struct {
 } FAT16;
 
 typedef struct {
+  uint8_t jmp_boot[3];
+  char oem_name[8];
+  uint16_t bytes_per_sector;
+  uint8_t sectors_per_cluster;
+  uint16_t reserved_sectors_count;
+  uint8_t number_of_FATs;
+  uint16_t root_entry_counter;
+  uint16_t total_sectors16;
+  uint8_t media;
+  uint16_t FAT_size16;
+  uint16_t sectors_per_track;
+  uint16_t number_of_heads;
+  uint32_t hidden_sectors;
+  uint32_t total_sectors32;
   uint32_t FAT_size32;
   uint16_t extra_flags;
   uint16_t filesystem_version;
