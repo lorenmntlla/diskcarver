@@ -56,10 +56,29 @@ int disk_close(Disk *disk);
 ssize_t disk_read(Disk *disk, void *buffer);
 
 /**
- * Reposition disk offset and sets current_sector accordingly
+ * Reads sectors to specified buffer and advances current_sector
+ * if not EOF
+ * @param disk Pointer to Disk
+ * @param buffer Buffer
+ * @param num_sectors Number of sectors to be read
+ * @return Total of bytes read
+ * */
+ssize_t disk_read_sectors(Disk *disk, void *buffer, size_t num_sectors);
+
+/**
+ * Reposition disk offset in bytes and sets current_sector
  * @param disk Pointer to disk
- * @param offset Offset
+ * @param offset Offset in bytes
  * @param whence Whence directive defined for POSIX
  * @return Resulting offset location if successful, -1 otherwise.
  * */
 off_t disk_seek(Disk *disk, off_t offset, int whence);
+
+/**
+ * Reposition disk offset in sectors and sets current_sector
+ * @param disk Pointer to disk
+ * @param offset Offset in sectors
+ * @param whence Whence directive defined for POSIX
+ * @return Resulting offset location if successful, -1 otherwise.
+ * */
+off_t disk_seek_sectors(Disk *disk, off_t sector_offset, int whence);

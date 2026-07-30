@@ -53,12 +53,11 @@ Disk *disk_open(const char *path, const Permission permission) {
 }
 
 int disk_close(Disk *disk) {
-  int retcode = 0;
+  int retcode;
+  retcode = close(disk->fd);
 
-  if (close(disk->fd) == -1) {
+  if (retcode == -1)
     perror("Failed to close disk");
-    retcode = -1;
-  }
 
   free(disk);
 
@@ -66,8 +65,8 @@ int disk_close(Disk *disk) {
 }
 
 ssize_t disk_read(Disk *disk, void *buffer) {
-  const size_t next = (disk->current_sector + 1) * disk->sector_size;
   size_t bytes = disk->sector_size;
+  const size_t next = (disk->current_sector + 1) * bytes;
 
   if (next > disk->total_bytes) {
     ssize_t remaining = (ssize_t)disk->total_bytes -
@@ -85,7 +84,34 @@ ssize_t disk_read(Disk *disk, void *buffer) {
   if (retcode != (ssize_t)bytes)
     perror("Failed to read sector from disk");
 
-  disk->current_sector++;
+  if (retcode > 0)
+    disk->current_sector++;
+
+  return retcode;
+}
+
+ssize_t disk_read_sectors(Disk *disk, void *buffer, size_t num_sectors) {
+  size_t bytes = disk->sector_size * num_sectors;
+  const size_t next = (disk->current_sector + 1) * bytes;
+
+  if (next > disk->total_bytes) {
+    ssize_t remaining = (ssize_t)disk->total_bytes -
+                        (ssize_t)(disk->current_sector * disk->sector_size);
+
+    if (remaining <= 0)
+      return -1;
+
+    bytes = (size_t)remaining;
+  }
+
+  ssize_t retcode;
+  retcode = read(disk->fd, buffer, bytes);
+
+  if (retcode != (ssize_t)bytes)
+    perror("Failed to read sectors from disk");
+
+  if (retcode > 0)
+    disk->current_sector += (size_t)retcode / disk->sector_size;
 
   return retcode;
 }
@@ -102,4 +128,8 @@ off_t disk_seek(Disk *disk, off_t offset, int whence) {
   disk->current_sector = (size_t)retcode / disk->sector_size;
 
   return retcode;
+}
+
+off_t disk_seek_sectors(Disk *disk, off_t lba_offset, int whence) {
+  return disk_seek(disk, lba_offset * (off_t)disk->sector_size, whence);
 }
