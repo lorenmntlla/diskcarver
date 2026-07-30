@@ -53,12 +53,11 @@ Disk *disk_open(const char *path, const Permission permission) {
 }
 
 int disk_close(Disk *disk) {
-  int retcode = 0;
+  int retcode;
+  retcode = close(disk->fd);
 
-  if (close(disk->fd) == -1) {
+  if (retcode == -1)
     perror("Failed to close disk");
-    retcode = -1;
-  }
 
   free(disk);
 
