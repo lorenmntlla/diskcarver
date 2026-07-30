@@ -90,6 +90,32 @@ ssize_t disk_read(Disk *disk, void *buffer) {
   return retcode;
 }
 
+ssize_t disk_read_sectors(Disk *disk, void *buffer, size_t num_sectors) {
+  size_t bytes = disk->sector_size * num_sectors;
+  const size_t next = (disk->current_sector + 1) * bytes;
+
+  if (next > disk->total_bytes) {
+    ssize_t remaining = (ssize_t)disk->total_bytes -
+                        (ssize_t)(disk->current_sector * disk->sector_size);
+
+    if (remaining <= 0)
+      return -1;
+
+    bytes = (size_t)remaining;
+  }
+
+  ssize_t retcode;
+  retcode = read(disk->fd, buffer, bytes);
+
+  if (retcode != (ssize_t)bytes)
+    perror("Failed to read sectors from disk");
+
+  if (retcode > 0)
+    disk->current_sector += (size_t)retcode / disk->sector_size;
+
+  return retcode;
+}
+
 off_t disk_seek(Disk *disk, off_t offset, int whence) {
   off_t retcode;
 
