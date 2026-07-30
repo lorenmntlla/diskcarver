@@ -75,10 +75,10 @@ ssize_t disk_read_sectors(Disk *disk, void *buffer, size_t num_sectors);
 off_t disk_seek(Disk *disk, off_t offset, int whence);
 
 /**
- * Reposition disk offset in LBAs and sets current_sector
+ * Reposition disk offset in sectors and sets current_sector
  * @param disk Pointer to disk
- * @param offset Offset in LBAs
+ * @param offset Offset in sectors
  * @param whence Whence directive defined for POSIX
  * @return Resulting offset location if successful, -1 otherwise.
  * */
-off_t disk_seek_lba(Disk *disk, off_t offset, int whence);
+off_t disk_seek_sectors(Disk *disk, off_t sector_offset, int whence);
